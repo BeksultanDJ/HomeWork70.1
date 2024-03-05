@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 interface Contact {
@@ -8,6 +8,20 @@ interface Contact {
     email: string;
     photo: string;
 }
+
+interface ContactsState {
+    contacts: Contact[];
+    selectedContact: Contact | null;
+    loading: boolean;
+    error: string | null;
+}
+
+const initialState: ContactsState = {
+    contacts: [],
+    selectedContact: null,
+    loading: false,
+    error: null,
+};
 
 export const fetchContacts = createAsyncThunk(
     'contacts/fetchContacts',
@@ -70,14 +84,39 @@ export const deleteContact = createAsyncThunk(
     }
 );
 
+const contactsSlice = createSlice({
+    name: 'contacts',
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchContacts.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchContacts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.contacts = action.payload;
+            })
+            .addCase(fetchContacts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? 'Ошибка при загрузке контактов';
+            })
+            .addCase(addContact.fulfilled, (state, action) => {
+                state.contacts.push(action.payload);
+            })
+            .addCase(updateContact.fulfilled, (state, action) => {
+                const { id, updatedContact } = action.payload;
+                const index = state.contacts.findIndex(contact => contact.id === id);
+                if (index !== -1) {
+                    state.contacts[index] = updatedContact;
+                }
+            })
+            .addCase(deleteContact.fulfilled, (state, action) => {
+                const id = action.payload;
+                state.contacts = state.contacts.filter(contact => contact.id !== id);
+            });
+    },
+});
 
-const initialState: ContactsState = {
-    contacts: [],
-    selectedContact: null,
-    loading: false,
-    error: null,
-};
-
-
-export { fetchContacts, addContact, updateContact, deleteContact };
 export default contactsSlice.reducer;
