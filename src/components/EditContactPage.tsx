@@ -20,6 +20,7 @@ const EditContact: React.FC<Props> = ({ id, initialName, initialPhone, initialEm
 
     const handleSubmit = () => {
         const updatedContact = {
+            id: id,
             name: name,
             phone: phone,
             email: email,
