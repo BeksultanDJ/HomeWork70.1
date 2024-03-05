@@ -27,27 +27,32 @@ const NewContact: React.FC = () => {
     };
 
     return (
-        <div className="container">
+        <div className="contact-card container">
             <h2>Создать новый контакт</h2>
             <input
+                className="nameInput"
                 type="text"
                 placeholder="Имя"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
             <input
+                className="phoneInput"
+
                 type="text"
                 placeholder="Телефон"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
             />
             <input
+                className="emailInput"
                 type="text"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
             <input
+                className="photoInput"
                 type="text"
                 placeholder="Ссылка на фото"
                 value={photo}
