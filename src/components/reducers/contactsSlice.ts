@@ -60,9 +60,15 @@ export const updateContact = createAsyncThunk(
     'contacts/updateContact',
     async ({ id, updatedContact }: { id: string, updatedContact: Contact }) => {
         try {
-            const response = await axios.put(`https://testapi2-bf456-default-rtdb.asia-southeast1.firebasedatabase.app/contacts/${id}.json`, updatedContact);
-            console.log('Контакт успешно отредактирован!', response.data);
-            return { id, updatedContact };
+            const response = await axios.get(`https://testapi2-bf456-default-rtdb.asia-southeast1.firebasedatabase.app/contacts/${id}.json`);
+            const currentContact = response.data;
+
+            const mergedContact = { ...currentContact, ...updatedContact };
+
+            const updateResponse = await axios.put(`https://testapi2-bf456-default-rtdb.asia-southeast1.firebasedatabase.app/contacts/${id}.json`, mergedContact);
+            console.log('Контакт успешно отредактирован!', updateResponse.data);
+
+            return { id, updatedContact: mergedContact };
         } catch (error) {
             console.error('Ошибка при редактировании контакта:', error);
             throw error;
