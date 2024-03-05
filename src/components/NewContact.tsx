@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addContact } from './reducers/contactsSlice';
 import { NavLink } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
 
 const NewContact: React.FC = () => {
     const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const NewContact: React.FC = () => {
 
     const handleSubmit = () => {
         const newContact = {
+            id: uuid(),
             name: name,
             phone: phone,
             email: email,
@@ -38,7 +40,6 @@ const NewContact: React.FC = () => {
             />
             <input
                 className="phoneInput"
-
                 type="text"
                 placeholder="Телефон"
                 value={phone}
