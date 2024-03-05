@@ -1,31 +1,37 @@
-import  { useState } from 'react';
-import axios from 'axios';
-import {NavLink} from "react-router-dom";
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateContact } from './reducers/contactsSlice';
+import { NavLink } from 'react-router-dom';
 
-const EditContact = ({ initialName = '', initialPhone = '', initialEmail = '', initialPhoto = '' }) => {
+interface Props {
+    id: string;
+    initialName: string;
+    initialPhone: string;
+    initialEmail: string;
+    initialPhoto: string;
+}
+
+const EditContact: React.FC<Props> = ({ id, initialName, initialPhone, initialEmail, initialPhoto }) => {
+    const dispatch = useDispatch();
     const [name, setName] = useState(initialName);
     const [phone, setPhone] = useState(initialPhone);
     const [email, setEmail] = useState(initialEmail);
     const [photo, setPhoto] = useState(initialPhoto);
 
     const handleSubmit = () => {
-        if (!name) {
-            alert('Вы ничего не ввели');
-            return;
-        }
-
-        const updatedQuote = {
+        const updatedContact = {
             name: name,
             phone: phone,
             email: email,
             photo: photo,
         };
 
-
+        dispatch(updateContact({ id: id, updatedContact: updatedContact }));
+    };
 
     return (
         <div className="contact-card container">
-            <h3>Create new contact</h3>
+            <h2>Редактировать контакт</h2>
             <input
                 className="nameInput"
                 type="text"
@@ -55,7 +61,9 @@ const EditContact = ({ initialName = '', initialPhone = '', initialEmail = '', i
                 onChange={(e) => setPhoto(e.target.value)}
             />
 
-            <NavLink to="/"><button onClick={handleSubmit}>Сохранить изменения</button></NavLink>
+            <NavLink to="/">
+                <button onClick={handleSubmit}>Сохранить изменения</button>
+            </NavLink>
         </div>
     );
 };
